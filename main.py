@@ -1,13 +1,13 @@
 from urllib.request import urlopen
 from flask import *
 from requests import get, post
-import json
+import json, random
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    return "<center><h1>INI INDEX<h1></center>"
+    return render_template('index.html')
 
 @app.route("/api")
 def api():
@@ -21,22 +21,24 @@ def spam_call():
             hasil = ''
             exec = post('https://id.jagreward.com/member/verify-mobile/'+no).json()
             if exec['result'] == 1:
-                hasil = '[!] Spam Berhasil'
+                hasil = "[!] Spam Berhasil"
+                status = 200
             else:
-                hasil = '[!] Spam Gagal'
+                hasil = "[!] Spam Gagal"
+                status = False
             return {
-                'status': 200,
-                'message': hasil
+                "status": 200,
+                "message": hasil
             }
         else:
             return {
-                'status': False,
-                'message': '[!] Tolong masukkan nomor awalan 8'
+                "status": False,
+                "message": "[!] Tolong masukkan nomor awalan 8"
             }
     else:
         return {
-            'status': False,
-            'message': '[!] Tolong masukkan parameter no'
+            "status": False,
+            "message": "[!] Tolong masukkan parameter no"
         }
 
 @app.route("/api/cjtest", methods=['GET', 'POST'])
@@ -61,18 +63,23 @@ def cj_test():
         status = check(cj)
         if status:
             return {
-                'status': 200,
-                'message': 'Web '+cj+' Vuln Clickjacking'
+                "status": 200,
+                "message": "Web "+cj+" Vuln Clickjacking"
             }
         elif not status: 
             return {
-                'status': False,
-                'message': 'Web '+cj+' Not Vuln Clickjacking'
+                "status": False,
+                "message": "Web "+cj+" Not Vuln Clickjacking"
+            }
+        else:
+            return {
+                "status": False,
+                "message": "unknow error"
             }
     else:
         return {
-            'status': False,
-            'message': '[!] Tolong masukkan parameter cj'
+            "status": False,
+            "message": "[!] Tolong masukkan parameter cj"
         }
 
 @app.route("/api/cmsscan", methods=['GET', 'POST'])
@@ -85,33 +92,33 @@ def cmsscan():
         cmsdrupal = get(url + '/admin',timeout=7)
         if "dashboard" in cmsop.text:
             return {
-                'status': 200,
-                'message': 'CMS Found, CMS = OPenCarte'
+                "status": 200,
+                "message": "CMS Found, CMS = OPenCarte"
             }
         elif "Joomla" in cmsjoomla.text:
             return {
-                'status': 200,
-                'message': 'CMS Found, CMS = Joomla'
+                "status": 200,
+                "message": "CMS Found, CMS = Joomla"
             }
         elif "WordPress" in cmswp.text:
             return {
-                'status': 200,
-                'message': 'CMS Found, CMS = WordPress'
+                "status": 200,
+                "message": "CMS Found, CMS = WordPress"
             }
         elif "sites/default" in cmsdrupal.text:
             return {
-                'status': 200,
-                'message': 'CMS Found, CMS = Drupal'
+                "status": 200,
+                "message": "CMS Found, CMS = Drupal"
             }
         else:
             return {
-                'status': False,
-                'message': 'CMS Not Found, url = '+url
+                "status": False,
+                "message": "CMS Not Found, url = "+url
             }
     else:
         return {
-            'status': False,
-            'message': 'Masukkan parameter c'
+            "status": False,
+            "message": "Masukkan parameter c"
         }
 
 @app.route("/api/wpuser", methods=['GET', 'POST'])
@@ -125,15 +132,24 @@ def wpuser():
             ipdata = json.loads(getu.text)
             
             data = {
-                'status': 200,
-                'message': ipdata[0]['slug']
+                "status": 200,
+                "message": ipdata[0]['slug']
             }
             return data
     else:
         return {
-            'status': 200,
-            'message': 'Masukkan parameter u'
+            "status": 200,
+            "message": "Masukkan parameter u"
         }
+
+@app.route("/api/randomquotes")
+def random_quote():
+    sl = json.loads(open('quotes.json','r').read())
+    js = random.choice(sl)
+    return {
+        "author": js['nama'],
+        "quote": js['quote']
+    }
 
 if __name__ == "__main__":
     app.run()
