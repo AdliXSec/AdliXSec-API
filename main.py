@@ -9,9 +9,9 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route("/api")
+@app.route("/api", methods=['GET', 'POST'])
 def api():
-    return "<center><h1>API BY ADLIXSEC {}<h1></center>"
+    return render_template('api.html')
 
 @app.route("/api/spamcall", methods=['GET', 'POST'])
 def spam_call():
@@ -27,7 +27,7 @@ def spam_call():
                 hasil = "[!] Spam Gagal"
                 status = False
             return {
-                "status": 200,
+                "status": status,
                 "message": hasil
             }
         else:
