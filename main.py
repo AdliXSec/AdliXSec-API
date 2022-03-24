@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 from flask import *
 from requests import get, post
-import json, random
+import json, random, hashlib, base64, string, socket
 
 app = Flask(__name__)
 
@@ -147,9 +147,158 @@ def random_quote():
     sl = json.loads(open('quotes.json','r').read())
     js = random.choice(sl)
     return {
-        "author": js['nama'],
-        "quote": js['quote']
+        "author": js["nama"],
+        "quote": js["quote"]
     }
+
+@app.route("/api/main", methods=['GET', 'POST'])
+def gbk():
+    if request.args.get('m'):
+        otak = ['gunting','batu','kertas']
+        encer = request.args.get('m')
+        mesin = random.choice(otak)
+        if encer == 'gunting' and mesin == 'batu':
+            return {
+                "status": 1,
+                "bot": mesin,
+                "message": "[X] HAHAHAHA Kamu Kalah!"
+            }
+        elif encer == 'batu' and mesin == 'kertas':
+            return {
+                "status": 1,
+                "bot": mesin,
+                "message": "[X] HAHAHAHA Kamu Kalah!"
+            }
+        elif encer == 'kertas' and mesin == 'gunting':
+            return {
+                "status": 1,
+                "bot": mesin,
+                "message": "[X] HAHAHAHA Kamu Kalah!"
+            }
+        elif encer == 'gunting' and mesin == 'kertas':
+            return {
+                "status": 2,
+                "bot": mesin,
+                "message": "[+] Hore kamu menang!"
+            }
+        elif encer == 'batu' and mesin == 'gunting':
+            return {
+                "status": 2,
+                "bot": mesin,
+                "message": "[+] Hore kamu menang!"
+            }
+        elif encer == 'kertas' and mesin == 'batu':
+            return {
+                "status": 2,
+                "bot": mesin,
+                "message": "[+] Hore kamu menang!"
+            }
+        elif encer == 'gunting' and mesin == 'gunting':
+            return {
+                "status": 0,
+                "bot": mesin,
+                "message": "[=] Wah Kita Sama!"
+            }
+        elif encer == 'batu' and mesin == 'batu':
+            return {
+                "status": 0,
+                "bot": mesin,
+                "message": "[=] Wah Kita Sama!"
+            }
+        elif encer == 'kertas' and mesin == 'kertas':
+            return {
+                "status": 0,
+                "bot": mesin,
+                "message": "[=] Wah Kita Sama!"
+            }
+    else:
+        return {
+            "status": False,
+            "message": "Masukkan parameter m"
+        }
+
+@app.route("/api/passgenerator", methods=['GET', 'POST'])
+def password_generator():
+    if request.args.get('p'):
+        text = request.args.get("p")
+        sha1 = hashlib.sha1()
+        md5 = hashlib.md5()
+        sha256 = hashlib.sha256()
+        sha384 = hashlib.sha384()
+        sha512 = hashlib.sha512()
+
+        sha1.update(text.encode("utf-8"))
+        md5.update(text.encode("utf-8"))
+        sha256.update(text.encode("utf-8"))
+        sha384.update(text.encode("utf-8"))
+        sha512.update(text.encode("utf-8"))
+        
+        psha1 = sha1.hexdigest()
+        pmd5 = md5.hexdigest()
+        psha25 = sha256.hexdigest()
+        psha384 = sha384.hexdigest()
+        psha512 = sha512.hexdigest()
+
+        return{
+            "status": 200,
+            "sha1": psha1,
+            "md5": pmd5,
+            "sha25": psha25,
+            "sha384": psha384,
+            "sha512": psha512,
+            "message": "Password generator berhasil"
+        }
+    else:
+        return {
+            "status": False,
+            "message": "Masukkan parameter p"
+        }
+
+@app.route("/api/b64", methods=['GET', 'POST'])
+def b64encdec():
+    if request.args.get('enc'):
+        sample_string = request.args.get("enc")
+        sample_string_bytes = sample_string.encode("ascii")
+        
+        base64_bytes = base64.b64encode(sample_string_bytes)
+        base64_string = base64_bytes.decode("ascii")
+        return {
+            "status": 200,
+            "message": "Berhasil encode",
+            "b64enc": base64_string
+        }
+    elif request.args.get('dec'):
+        sample_string = request.args.get("dec")
+        sample_string_bytes = sample_string.encode("ascii")
+        
+        base64_bytes = base64.b64decode(sample_string_bytes)
+        base64_string = base64_bytes.decode("ascii")
+        return {
+            "status": 200,
+            "message": "Berhasil encode",
+            "b64dec": base64_string
+        }
+    else:
+        return {
+            "status": False,
+            "message": "Masukkan parameter enc atau dec"
+        }
+
+@app.route('/api/iphost', methods=['GET', 'POST'])
+def getIP():
+    if request.args.get('ip'):
+        host = request.args.get('ip')
+        ip = socket.gethostbyname(host)
+        return{
+            "status": 200,
+            "iphost": ip,
+            "message": "berhasil"
+        }
+    else:
+        return {
+            "status": False,
+            "message": "Masukkan parameter ip"
+        }
 
 if __name__ == "__main__":
     app.run()

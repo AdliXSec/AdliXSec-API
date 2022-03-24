@@ -34,37 +34,55 @@
                                 <td>1</td>
                                 <td>Spam Call</td>
                                 <td>/api/spamcall?no=(no target)</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/spamcall" style="text-decoration: none;">Link</a></td>
+                                <td><a href="/api/spamcall" style="text-decoration: none;">Link</a></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>Clickjacking Test</td>
-                                <td>/api/cjtest?cj=(target)</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/cjtest" style="text-decoration: none;">Link</a></td>
+                                <td>/api/cjtest?cj=(https://target)</td>
+                                <td><a href="/api/cjtest" style="text-decoration: none;">Link</a></td>
                             </tr>
                             <tr>
                                 <td>3</td>
-                                <td>Clickjacking Test</td>
-                                <td>/api/cjtest?cj=(https://target)</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/cjtest" style="text-decoration: none;">Link</a></td>
+                                <td>CMS Scanner</td>
+                                <td>/api/cmsscan?c=(https://target)</td>
+                                <td><a href="/api/cmsscan" style="text-decoration: none;">Link</a></td>
                             </tr>
                             <tr>
                                 <td>4</td>
-                                <td>CMS Scanner</td>
-                                <td>/api/cmsscan?c=(https://target)</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/cmsscan" style="text-decoration: none;">Link</a></td>
+                                <td>WP User Scan</td>
+                                <td>/api/wpuser?u=(https://target)</td>
+                                <td><a href="/api/wpuser" style="text-decoration: none;">Link</a></td>
                             </tr>
                             <tr>
                                 <td>5</td>
-                                <td>WP User Scan</td>
-                                <td>/api/wpuser?u=(https://target)</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/wpuser" style="text-decoration: none;">Link</a></td>
+                                <td>Random Quotes</td>
+                                <td>/api/randomquotes</td>
+                                <td><a href="/api/randomquotes" style="text-decoration: none;">Link</a></td>
                             </tr>
                             <tr>
                                 <td>6</td>
-                                <td>Random Quotes</td>
-                                <td>/api/randomquotes</td>
-                                <td><a href="https://adlixsec-api.herokuapp.com/api/randomquotes" style="text-decoration: none;">Link</a></td>
+                                <td>Gunting Batu Kertas</td>
+                                <td>/api/main?m=(Gunting/Batu/Kertas)</td>
+                                <td><a href="/api/main" style="text-decoration: none;">Link</a></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Password Generator</td>
+                                <td>/api/passgenerator?p=(pass lu)</td>
+                                <td><a href="/api/passgenerator" style="text-decoration: none;">Link</a></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Base64 Encode and Decode</td>
+                                <td>Encode = /api/b64?enc=(string), Decode = /api/b64?dec=(string)</td>
+                                <td><a href="/api/b64" style="text-decoration: none;">Link</a></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Get IP From Host</td>
+                                <td>/api/iphost?ip=(www.example.com)</td>
+                                <td><a href="/api/iphost" style="text-decoration: none;">Link</a></td>
                             </tr>
                         </tbody>
                     </table>
