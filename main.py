@@ -13,6 +13,18 @@ def index():
 def api():
     return render_template('api.html')
 
+@app.route("/api/", methods=['GET', 'POST'])
+def api1():
+    return render_template('api.html')
+
+@app.errorhandler(404)
+def notfound(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internalerr(e):
+    return render_template('500.html'), 500
+
 @app.route("/api/spamcall", methods=['GET', 'POST'])
 def spam_call():
     if request.args.get('no'):
@@ -289,7 +301,7 @@ def getIP():
     if request.args.get('ip'):
         host = request.args.get('ip')
         ip = socket.gethostbyname(host)
-        return{
+        return {
             "status": 200,
             "iphost": ip,
             "message": "berhasil"
