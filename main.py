@@ -377,5 +377,31 @@ def admninfind():
             "message": "masukkan parameter af"
         }
 
+@app.route('/api/sha1crack', methods=['GET', 'POST'])
+def sha1crack():
+    if request.args.get('sha1'):
+        sha1_c = request.args.get("sha1")
+        pwd = open("mdpass.txt", 'r')
+        for password in pwd:
+            sha1 = hashlib.sha1()
+            sha1.update(password.strip().encode('utf-8'))
+            if sha1_c.strip() == sha1.hexdigest():
+                return {
+                    "status": 200,
+                    "password": password.strip(),
+                    "message": "Password Ditemukan"
+                }
+        else:
+            return {
+                    "status": False,
+                    "password": "",
+                    "message": "Password Tidak ditemukan"
+                }
+    else:
+        return {
+            "status": False,
+            "message": "masukkan parameter sha1"
+        }
+
 if __name__ == "__main__":
     app.run()
