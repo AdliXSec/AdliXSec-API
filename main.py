@@ -1,3 +1,4 @@
+from ast import Return
 from urllib.request import urlopen
 from flask import *
 from requests import get, post
@@ -310,6 +311,70 @@ def getIP():
         return {
             "status": False,
             "message": "Masukkan parameter ip"
+        }
+
+@app.route('/api/md5crack', methods=['GET', 'POST'])
+def md5crack():
+    if request.args.get('md5'):
+        md5_c = request.args.get("md5")
+        pwd = open("mdpass.txt", 'r')
+        for password in pwd:
+            md5 = hashlib.md5()
+            md5.update(password.strip().encode('utf-8'))
+            if md5_c.strip() == md5.hexdigest():
+                return {
+                    "status": 200,
+                    "password": password.strip(),
+                    "message": "Password Ditemukan"
+                }
+        else:
+            return {
+                    "status": False,
+                    "password": "",
+                    "message": "Password Tidak ditemukan"
+                }
+    else:
+        return {
+            "status": False,
+            "message": "masukkan parameter md5"
+        }
+
+@app.route('/api/adfind', methods=['GET', 'POST'])
+def admninfind():
+    if request.args.get('af'):
+        url = request.args.get("af")
+        file = open("admin.txt", "r")	
+        try:
+            for link in file.read().splitlines():
+                curl = url + link
+                res = get(curl)
+                if 'login' in res.text or 'Login' in res.text or 'LogIn' in res.text and res.status_code == 200:
+                    return {
+                        "status": 200,
+                        "admin": curl,
+                        "message": "Panel Admin Berhasil ditemukan"
+                    }
+            else:
+                return {
+                        "status": False,
+                        "admin": "",
+                        "message": "Panel Admin Gagal ditemukan"
+                    }
+        
+        except KeyboardInterrupt:
+            return {
+                "status": False,
+                "message": "Shotdown Requests"
+            }
+        except:
+            return {
+                "status": False,
+                "message": "Unknow Error"
+            }
+    else:
+        return {
+            "status": False,
+            "message": "masukkan parameter af"
         }
 
 if __name__ == "__main__":
