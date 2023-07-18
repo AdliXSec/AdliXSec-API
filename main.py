@@ -1,10 +1,15 @@
 from ast import Return
 from urllib.request import urlopen
 from flask import *
+from datetime import datetime
+from pyqrcode import QRCode
+import os
 from requests import get, post
 import json, random, hashlib, base64, string, socket
 
+host = "http://127.0.0.1:5000"
 app = Flask(__name__)
+
 
 ua = [
     'Mozilla/5.0 (X11; CrOS x86_64 13310.76.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.108 Safari/537.36',
@@ -41,6 +46,44 @@ def notfound(e):
 @app.errorhandler(500)
 def internalerr(e):
     return render_template('500.html'), 500
+
+@app.route("/foto", methods=['GET', 'POST'])
+def tampilkanfoto():
+    if request.args.get('f'):
+        name_file = request.args.get('f')
+        direktori = os.path.join(app.root_path, 'data')
+        return send_from_directory(direktori, name_file)
+    else:
+        name_file = "foto.png"
+        direktori = os.path.join(app.root_path, 'foto')
+        return send_from_directory(direktori, name_file)
+
+@app.route("/api/qrcode", methods=['GET', 'POST'])
+def qrcode():
+    try:
+        if request.args.get('data'):
+            data = request.args.get('data')
+            qrfile = os.path.join("data", f"hasil_qrcode_{data}.png")
+            QR_Code = QRCode(data)
+            QR_Code.png(qrfile, scale=10)
+            for i in os.listdir("data"):
+                if i.endswith(f"{data}.png"):
+                    print(i)
+                    return {
+                        "status": 200,
+                        "result": f"{host}/foto?f=hasil_qrcode_{data}.png",
+                        "message": "success"
+                    }
+        else:
+            return {
+                    "status": False,
+                    "message": "masukkan parameter data"
+                }
+    except:
+        return {
+                    "status": False,
+                    "message": "bad"
+                }
 
 @app.route("/api/spamcall", methods=['GET', 'POST'])
 def spam_call():
